@@ -1,6 +1,7 @@
 import consants;
 import types;
-enum gridsize=16;
+import basic;//BAD: I want writeln rn
+enum gridsize=32;
 enum gridcellsx=playfieldx/gridsize;
 enum gridcellsy=playfieldy/gridsize;
 enum gridcells=gridcellsx*gridcellsy;
@@ -18,6 +19,8 @@ struct gridarray(T,int n){
 			active[length]=a;
 			length++;
 		}
+		ref auto torange(){return active[0..length];}
+		alias torange this;
 	bool isdead(gridvec2 a){
 		return a.x!=a.x && a.y!=a.y;
 	}
@@ -29,7 +32,7 @@ struct gridarray(T,int n){
 		p.y=cast(int)(temp.y/gridsize);
 		return p;
 	}
-	size_t[gridcells] offsets;//consider factoring into a god object
+	size_t[gridcells+1] offsets;//consider factoring into a god object
 		void zerooffsets(){
 			foreach(ref e;offsets){
 				e=0;}}
@@ -37,7 +40,7 @@ struct gridarray(T,int n){
 			size_t total=0;
 			foreach(ref e;offsets){
 				total+=e;
-				e=total;
+				e=total-e;
 		}}
 		alias offset=int;
 		offset to(S:offset)(pos p){
@@ -49,23 +52,29 @@ struct gridarray(T,int n){
 			return temp;
 		}
 		ref size_t offsets_(pos p){
-			return offsets[to!offset(p)];//make uviversal function call syntax universal
+			return offsets[min(to!offset(p)+1,$-1)];//make uviversal function call syntax universal
 		}
 		ref size_t offsets_(T a){
 			return offsets_(to!pos(a)); //make uviversal function call syntax universal
 		}
 	void sort(){
 		zerooffsets;
-		foreach(e;active[0..length]){
+		foreach(i,e;active[0..length]){
 			offsets_(e)++;
 		}
 		prefixsumoffsets;
 		auto store=offsets;
-		foreach(e;active[0..length]){
+		foreach(i,e;active[0..length]){
 			inactive[offsets_(e)]=e;
 			offsets_(e)++;
 		}
 		offsets=store;
 		tick;
 	}
+	T[] opIndex(pos p){
+		return active[min(offsets_(p),$-1)..min(offsets[min(to!offset(p)+2,$-1)],$-1)];//BAD oh my god I need to write an abstraction for slicing thats returns an empty one for whatever reason
+	}
 }
+//TODO: add delete system
+//TODO: make nice ranges for pairing off local elements
+//TODO: check the speed is in line with kd trees memes
