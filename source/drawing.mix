@@ -1,0 +1,3 @@
+InitWindow(windowx, windowy, "Hello, Raylib-D!");
+SetWindowPosition(1800,0);
+SetTargetFPS(60);
