@@ -24,13 +24,17 @@ struct gridarray(T,int n){
 	bool isdead(gridvec2 a){
 		return a.x!=a.x && a.y!=a.y;
 	}
+	pos to(S:pos)(gridvec2 v){
+		pos p;
+		p.x=cast(int)(v.x/gridsize);
+		p.y=cast(int)(v.y/gridsize);
+		return p;
+	}
+	
 	pos to(S:pos)(T a){
 		gridvec2 temp=a.to!gridvec2;
 		if(isdead(temp)){return pos(1000,1000);}//make uviversal function call syntax universal
-		pos p;
-		p.x=cast(int)(temp.x/gridsize);
-		p.y=cast(int)(temp.y/gridsize);
-		return p;
+		return to!pos(temp);//make uviversal function call syntax universal
 	}
 	size_t[gridcells+1] offsets;//consider factoring into a god object
 		void zerooffsets(){
@@ -44,7 +48,7 @@ struct gridarray(T,int n){
 		}}
 		alias offset=int;
 		offset to(S:offset)(pos p){
-			if(p==pos(1000,1000)){assert(0);}//TODO: should somehow filter out and set length smaller
+			//TODO: uncomment this if(p==pos(1000,1000)){assert(0);}//TODO: should somehow filter out and set length smaller
 			if(p.x<0||p.x>=gridcellsx){return -1;}
 			if(p.y<0||p.y>=gridcellsy){return -1;}
 			auto temp=p.x+p.y*gridcellsx;
@@ -73,6 +77,11 @@ struct gridarray(T,int n){
 	}
 	T[] opIndex(pos p){
 		return active[min(offsets_(p),$-1)..min(offsets[min(to!offset(p)+2,$-1)],$-1)];//BAD oh my god I need to write an abstraction for slicing thats returns an empty one for whatever reason
+	}
+	T[] opIndex(S)(S a){
+		auto temp=a.to!gridvec2;
+		if(isdead(temp)){return [];}//make uviversal function call syntax universal
+		return this[to!pos(temp)];
 	}
 }
 //TODO: add delete system

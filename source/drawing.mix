@@ -1,3 +1,20 @@
 InitWindow(windowx, windowy, "Hello, Raylib-D!");
 SetWindowPosition(1800,0);
 SetTargetFPS(60);
+template draw_(){
+	void draw(player_){// this was a typo; why is it compiling
+		DrawCircle(playfieldx/2,playfieldy/2,16,RED);}
+	void draw(bullet b){
+		DrawCircleV(b.to!gridvec2,4,RED);}
+	void draw(bullets_ b){
+		foreach(ref e;b){
+			draw(e);}}
+	void draw(enemy e){
+		DrawCircleV(e.to!gridvec2,12,BLUE);}
+	void draw(enemys_ e){
+		foreach(ref f;e){
+			draw(f);}}
+}
+auto draw(T...)(T args){
+	draw_!().draw(args);
+}
