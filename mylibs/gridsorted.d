@@ -63,12 +63,12 @@ struct gridarray(T,int n){
 		}
 	void sort(){
 		zerooffsets;
-		foreach(i,e;active[0..length]){
+		foreach(e;active[0..length]){
 			offsets_(e)++;
 		}
 		prefixsumoffsets;
 		auto store=offsets;
-		foreach(i,e;active[0..length]){
+		foreach(e;active[0..length]){
 			inactive[offsets_(e)]=e;
 			offsets_(e)++;
 		}
