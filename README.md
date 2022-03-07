@@ -1,4 +1,4 @@
-`dmd -run source/app.d`
+`./biuld.d`
 
 ## current state
 
