@@ -1,4 +1,4 @@
-#!rdmd
+#!rdmd -I./mylibs
 enum localfolders=[
 	"experiments",
 	"mylibs",
@@ -16,15 +16,30 @@ struct toggleableflag{
 enum toggleableflags=[
 	toggleableflag("-run","b"),//-run needs to be kept last
 ];
+enum linuxflags=[
+	"-L-lraylib",
+];
+enum windowsflags=[
+	"-L+libraylibdll.a"
+];
+version(Windows){
+	enum platformflags=windowsflags;
+	enum win=true;
+}
+version(linux){
+	enum platformflags=linuxflags;
+	enum win=false;
+}
 enum flags=[
 	"-i",
-	"-L-lraylib",//TODO: check if this is the same on windows
-];
+]~platformflags;
+
 enum defualtcompiler="dmd ";
 import basic;
 import scombinators;
 void main(string[] s){
-	bool verbose=false;//TODO: make flag for verbose
+	//s.writeln;
+	bool verbose=true;//TODO: make flag for verbose
 	string constructcommand(string[] args){
 		int indentifyfile(){
 			int i=0;
@@ -76,7 +91,11 @@ void main(string[] s){
 			(rest.joiner(" ").array)).to!string;
 	}
 	string c;
-	c=constructcommand(s[1..$]);//TODO make windows friendly take
+	//static if(win){
+	//	c=constructcommand(s[0..$]);
+	//}else{
+		c=constructcommand(s[1..$]);
+	//}
 	if(verbose){
 		c.writeln;
 	}
