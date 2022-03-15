@@ -20,7 +20,9 @@ enum linuxflags=[
 	"-L-lraylib",
 ];
 enum windowsflags=[
-	"-L+libraylibdll.a"
+	"raylib.lib",
+	"raylibdll.lib",
+	"-m32mscoff",
 ];
 version(Windows){
 	enum platformflags=windowsflags;
