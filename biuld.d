@@ -22,7 +22,9 @@ enum linuxflags=[
 enum windowsflags=[
 	"raylib.lib",
 	"raylibdll.lib",
-	"-m32mscoff",
+	//"raylib.dll",
+	//"-m32mscoff",
+	"-m64",
 ];
 version(Windows){
 	enum platformflags=windowsflags;
