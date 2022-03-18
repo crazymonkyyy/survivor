@@ -19,9 +19,13 @@ enum toggleableflags=[
 enum linuxflags=[
 	"-L-lraylib",
 ];
-enum windowsflags=[
-	"raylib.lib",
+enum windowsflags=[//todo find msvc16
+	//"raylib.lib",
 	"raylibdll.lib",
+	"WinMM.lib",
+	"MSVCRT.lib",
+	"OLDNAMES.lib",
+	"-L=/NODEFAULTLIB:MSVCRT",
 	//"raylib.dll",
 	//"-m32mscoff",
 	"-m64",
